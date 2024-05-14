@@ -1,13 +1,13 @@
-output "private_endpoints" {
-  description = <<DESCRIPTION
-  A map of the private endpoints created.
-  DESCRIPTION
-  value       = var.private_endpoints_manage_dns_zone_group ? azurerm_private_endpoint.this_managed_dns_zone_groups : azurerm_private_endpoint.this_unmanaged_dns_zone_groups
-}
-
-# Module owners should include the full resource via a 'resource' output
-# https://azure.github.io/Azure-Verified-Modules/specs/terraform/#id-tffr2---category-outputs---additional-terraform-outputs
 output "resource" {
-  description = "This is the full output for the resource."
-  value       = azurerm_resource_group.TODO # TODO: Replace this dummy resource azurerm_resource_group.TODO with your module resource
+  description = <<DESCRIPTION
+This is the full output for the resource. It contains the following properties:
+
+- `id` - type: string - The Azure Resource ID of the virtual hub resource that this route server is associated to.
+- `location` - type: string - The azure location of the route server resource.
+- `name` - type: string - The name of the route server resource.
+- `tags' - type: map(string) - A tags map for any directly assigned tags for the route server resource.
+- 'virtual_router_asn` - type: number - The ASN number for the route server resource. 
+- `virtual_router_ips` - type: list(string) - A list containing the peer ip's for route server.
+DESCRIPTION
+  value       = data.azurerm_virtual_hub.this
 }

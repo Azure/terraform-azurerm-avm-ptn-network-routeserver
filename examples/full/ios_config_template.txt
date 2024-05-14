@@ -1,0 +1,27 @@
+Section: IOS configuration
+!Configure Interfaces
+interface GigabitEthernet1
+ ip address ${nic_0_ip_address} ${nic_0_netmask}
+ ip nat outside
+ load-interval 30
+ speed 1000
+ no negotiation auto
+ no mop enabled
+ no mop sysid
+!
+router bgp ${asn}
+ bgp router-id ${router_id}
+ bgp log-neighbor-changes
+ neighbor ${avs_ars_ip_0} remote-as 65515
+ neighbor ${avs_ars_ip_0} ebgp-multihop 2
+ neighbor ${avs_ars_ip_1} remote-as 65515
+ neighbor ${avs_ars_ip_1} ebgp-multihop 2
+!
+ address-family ipv4 
+  neighbor ${avs_ars_ip_0} activate
+  neighbor ${avs_ars_ip_0} soft-reconfiguration inbound
+  neighbor ${avs_ars_ip_1} activate
+  neighbor ${avs_ars_ip_1} soft-reconfiguration inbound
+  auto-summary
+exit-address-family
+!
