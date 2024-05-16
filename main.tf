@@ -1,12 +1,12 @@
 resource "azapi_resource" "route_server_hub" {
   type = "Microsoft.Network/virtualHubs@2023-04-01"
-  body = jsonencode({
+  body = {
     properties = {
       sku                        = "Standard"
       hubRoutingPreference       = var.hub_routing_preference
       allowBranchToBranchTraffic = var.enable_branch_to_branch
     }
-  })
+  }
   location                  = var.location
   name                      = var.name
   parent_id                 = var.resource_group_resource_id
@@ -25,7 +25,7 @@ resource "azurerm_public_ip" "route_server_pip" {
 
 resource "azapi_resource" "route_server_ip_config_dynamic" {
   type = "Microsoft.Network/virtualHubs/ipConfigurations@2023-04-01"
-  body = jsonencode({
+  body = {
     properties = {
       subnet = {
         id = var.route_server_subnet_resource_id
@@ -36,7 +36,7 @@ resource "azapi_resource" "route_server_ip_config_dynamic" {
       privateIPAllocationMethod = var.private_ip_allocation_method
       privateIpAddress          = (lower(var.private_ip_allocation_method) == "static" ? var.private_ip_address : null)
     }
-  })
+  }
   name                      = var.name
   parent_id                 = azapi_resource.route_server_hub.id
   response_export_values    = ["*"]

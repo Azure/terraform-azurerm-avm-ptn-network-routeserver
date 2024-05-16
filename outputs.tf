@@ -11,3 +11,7 @@ This is the full output for the resource. It contains the following properties:
 DESCRIPTION
   value       = data.azurerm_virtual_hub.this
 }
+
+output "resource_id" {
+  value = azapi_resource.route_server_hub.id
+}

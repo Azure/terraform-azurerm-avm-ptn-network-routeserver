@@ -1,5 +1,5 @@
 <!-- BEGIN_TF_DOCS -->
-# Default example
+# Default virtual network routeserver example
 
 This example deploys the module in the most common form.  It enables branch-to-branch and uses a dynamic private ip configuration.
 
@@ -24,6 +24,10 @@ terraform {
 
 provider "azurerm" {
   features {}
+}
+
+provider "azapi" {
+  enable_hcl_output_for_data_source = true
 }
 
 

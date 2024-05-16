@@ -1,5 +1,5 @@
 <!-- BEGIN_TF_DOCS -->
-# Full example
+# Full virtual network route server example
 
 This example demonstrates each feature of the module.  It includes the follow features:
 - Enables branch-to-branch
@@ -31,6 +31,10 @@ terraform {
 
 provider "azurerm" {
   features {}
+}
+
+provider "azapi" {
+  enable_hcl_output_for_data_source = true
 }
 
 ## Section to provide a random Azure region for the resource group
@@ -122,7 +126,7 @@ module "avm_res_keyvault_vault" {
 #create a cisco 8k nva for demonstrating bgp peers
 module "cisco_8k" {
   source  = "Azure/avm-res-compute-virtualmachine/azurerm"
-  version = "0.11.0"
+  version = "0.13.0"
 
   admin_credential_key_vault_resource_id = module.avm_res_keyvault_vault.resource.id
   admin_username                         = "azureuser"
@@ -190,7 +194,7 @@ data "azurerm_client_config" "current" {}
 module "full_route_server" {
   source = "../.."
   # source             = "Azure/avm-res-network-routeserver/azurerm"
-  # version            = "0.1.1"
+  # version            = "0.1.0"
 
   enable_branch_to_branch         = true
   enable_telemetry                = var.enable_telemetry
@@ -309,7 +313,7 @@ Version: >= 0.5.0
 
 Source: Azure/avm-res-compute-virtualmachine/azurerm
 
-Version: 0.11.0
+Version: 0.13.0
 
 ### <a name="module_full_route_server"></a> [full\_route\_server](#module\_full\_route\_server)
 

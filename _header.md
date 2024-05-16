@@ -1,6 +1,6 @@
 # terraform-azurerm-avm-ptn-network-routeserver
 
-This is the route server resource module for the Azure Verified Modules library.  This module deploys a virtual network based route server along with common associated resources.  It leverages the both the AzureRM and AzAPI providers and sets a number of initial defaults to minimize the overall inputs for simple configurations. 
+This is the route server pattern module for the Azure Verified Modules library.  This module deploys a virtual network based route server along with common associated resources.  It leverages both the AzureRM and AzAPI providers and sets a number of initial defaults to minimize the overall inputs for simple configurations. 
 
 > [!IMPORTANT]
 > As the overall AVM framework is not GA (generally available) yet - the CI framework and test automation is not fully functional and implemented across all supported languages yet - breaking changes are expected, and additional customer feedback is yet to be gathered and incorporated. Hence, modules **WILL NOT** be published at version `1.0.0` or higher at this time.

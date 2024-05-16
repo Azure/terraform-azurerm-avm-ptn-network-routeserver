@@ -1,7 +1,7 @@
 <!-- BEGIN_TF_DOCS -->
 # terraform-azurerm-avm-ptn-network-routeserver
 
-This is the route server resource module for the Azure Verified Modules library.  This module deploys a virtual network based route server along with common associated resources.  It leverages the both the AzureRM and AzAPI providers and sets a number of initial defaults to minimize the overall inputs for simple configurations.
+This is the route server pattern module for the Azure Verified Modules library.  This module deploys a virtual network based route server along with common associated resources.  It leverages both the AzureRM and AzAPI providers and sets a number of initial defaults to minimize the overall inputs for simple configurations.
 
 > [!IMPORTANT]
 > As the overall AVM framework is not GA (generally available) yet - the CI framework and test automation is not fully functional and implemented across all supported languages yet - breaking changes are expected, and additional customer feedback is yet to be gathered and incorporated. Hence, modules **WILL NOT** be published at version `1.0.0` or higher at this time.
@@ -13,30 +13,34 @@ This is the route server resource module for the Azure Verified Modules library.
 
 The following requirements are needed by this module:
 
-- <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (~> 1.5)
+- <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (~> 1.6)
 
-- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 3.71)
+- <a name="requirement_azapi"></a> [azapi](#requirement\_azapi) (~> 1.13, != 1.13.0)
+
+- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 3.74)
 
 - <a name="requirement_random"></a> [random](#requirement\_random) (~> 3.5)
+
+- <a name="requirement_time"></a> [time](#requirement\_time) (~> 0.10)
 
 ## Providers
 
 The following providers are used by this module:
 
-- <a name="provider_azapi"></a> [azapi](#provider\_azapi)
+- <a name="provider_azapi"></a> [azapi](#provider\_azapi) (~> 1.13, != 1.13.0)
 
-- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (~> 3.71)
+- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (~> 3.74)
 
 - <a name="provider_random"></a> [random](#provider\_random) (~> 3.5)
 
-- <a name="provider_time"></a> [time](#provider\_time)
+- <a name="provider_time"></a> [time](#provider\_time) (~> 0.10)
 
 ## Resources
 
 The following resources are used by this module:
 
-- [azapi_resource.route_server_hub](https://registry.terraform.io/providers/hashicorp/azapi/latest/docs/resources/resource) (resource)
-- [azapi_resource.route_server_ip_config_dynamic](https://registry.terraform.io/providers/hashicorp/azapi/latest/docs/resources/resource) (resource)
+- [azapi_resource.route_server_hub](https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource) (resource)
+- [azapi_resource.route_server_ip_config_dynamic](https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource) (resource)
 - [azurerm_management_lock.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/management_lock) (resource)
 - [azurerm_public_ip.route_server_pip](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/public_ip) (resource)
 - [azurerm_resource_group_template_deployment.telemetry](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group_template_deployment) (resource)
@@ -227,6 +231,10 @@ Description: This is the full output for the resource. It contains the following
 - `tags' - type: map(string) - A tags map for any directly assigned tags for the route server resource.
 - 'virtual_router_asn` - type: number - The ASN number for the route server resource.
 - `virtual_router_ips` - type: list(string) - A list containing the peer ip's for route server.
+
+### <a name="output_resource_id"></a> [resource\_id](#output\_resource\_id)
+
+Description: n/a
 
 ## Modules
 

@@ -1,4 +1,4 @@
-# Full example
+# Full virtual network route server example
 
 This example demonstrates each feature of the module.  It includes the follow features:
 - Enables branch-to-branch

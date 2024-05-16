@@ -20,6 +20,10 @@ provider "azurerm" {
   features {}
 }
 
+provider "azapi" {
+  enable_hcl_output_for_data_source = true
+}
+
 
 ## Section to provide a random Azure region for the resource group
 # This allows us to randomize the region for the resource group.
