@@ -1,3 +1,4 @@
-# Default example
+# Default virtual network routeserver example
 
-This deploys the module in its simplest form.
+This example deploys the module in the most common form.  It enables branch-to-branch and uses a dynamic private ip configuration.
+

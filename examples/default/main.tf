@@ -1,6 +1,10 @@
 terraform {
-  required_version = "~> 1.5"
+  required_version = "~> 1.6"
   required_providers {
+    azapi = {
+      source  = "Azure/azapi"
+      version = "~> 1.9"
+    }
     azurerm = {
       source  = "hashicorp/azurerm"
       version = "~> 3.74"
@@ -14,6 +18,10 @@ terraform {
 
 provider "azurerm" {
   features {}
+}
+
+provider "azapi" {
+  enable_hcl_output_for_data_source = true
 }
 
 
@@ -43,17 +51,41 @@ resource "azurerm_resource_group" "this" {
   name     = module.naming.resource_group.name_unique
 }
 
-# This is the module call
-# Do not specify location here due to the randomization above.
-# Leaving location as `null` will cause the module to use the resource group location
-# with a data source.
-module "test" {
-  source = "../../"
-  # source             = "Azure/avm-<res/ptn>-<name>/azurerm"
-  # ...
-  location            = azurerm_resource_group.this.location
-  name                = "TODO" # TODO update with module.naming.<RESOURCE_TYPE>.name_unique
-  resource_group_name = azurerm_resource_group.this.name
+module "virtual_network" {
+  source  = "Azure/avm-res-network-virtualnetwork/azurerm"
+  version = "0.1.4"
 
-  enable_telemetry = var.enable_telemetry # see variables.tf
+  name                          = module.naming.virtual_network.name_unique
+  resource_group_name           = azurerm_resource_group.this.name
+  location                      = azurerm_resource_group.this.location
+  virtual_network_address_space = ["10.0.0.0/16"]
+
+  subnets = {
+    "GatewaySubnet" = {
+      address_prefixes = ["10.0.0.0/24"]
+    }
+    "RouteServerSubnet" = {
+      address_prefixes = ["10.0.1.0/24"]
+    }
+  }
+}
+
+module "default" {
+  source = "../.."
+  # source             = "Azure/avm-res-network-routeserver/azurerm"
+  # version            = "0.1.1"
+
+  location                        = azurerm_resource_group.this.location
+  name                            = "${module.naming.virtual_wan.name_unique}-rs"
+  resource_group_name             = azurerm_resource_group.this.name
+  resource_group_resource_id      = azurerm_resource_group.this.id
+  private_ip_allocation_method    = "Dynamic"
+  route_server_subnet_resource_id = module.virtual_network.subnets["RouteServerSubnet"].id
+  enable_branch_to_branch         = true
+
+  enable_telemetry = var.enable_telemetry
+}
+
+output "resource_output" {
+  value = module.default.resource
 }
