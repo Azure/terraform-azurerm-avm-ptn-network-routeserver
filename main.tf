@@ -15,15 +15,22 @@ resource "azapi_resource" "route_server_hub" {
 }
 
 resource "azurerm_public_ip" "route_server_pip" {
-  allocation_method   = "Static"
-  location            = var.location
-  name                = local.routeserver_public_ip_name
-  resource_group_name = var.resource_group_name
-  sku                 = "Standard"
-  tags                = var.tags
+  allocation_method       = var.routeserver_public_ip_config.allocation_method
+  location                = coalesce(var.routeserver_public_ip_config.location, var.location)
+  name                    = coalesce(var.routeserver_public_ip_config.name, "${var.name}-pip")
+  resource_group_name     = coalesce(var.routeserver_public_ip_config.resource_group_name, var.resource_group_name)
+  ddos_protection_mode    = var.routeserver_public_ip_config.ddos_protection_mode
+  ddos_protection_plan_id = var.routeserver_public_ip_config.ddos_protection_plan_id
+  ip_tags                 = var.routeserver_public_ip_config.ip_tags
+  ip_version              = var.routeserver_public_ip_config.ip_version
+  public_ip_prefix_id     = var.routeserver_public_ip_config.public_ip_prefix_resource_id
+  sku                     = var.routeserver_public_ip_config.sku
+  sku_tier                = var.routeserver_public_ip_config.sku_tier
+  tags                    = var.routeserver_public_ip_config.tags != {} ? var.routeserver_public_ip_config.tags : var.tags
+  zones                   = var.routeserver_public_ip_config.zones
 }
 
-resource "azapi_resource" "route_server_ip_config_dynamic" {
+resource "azapi_resource" "route_server_ip_config" {
   type = "Microsoft.Network/virtualHubs/ipConfigurations@2023-04-01"
   body = {
     properties = {
@@ -46,7 +53,7 @@ resource "azapi_resource" "route_server_ip_config_dynamic" {
 resource "time_sleep" "wait_300_seconds" {
   create_duration = "300s"
 
-  depends_on = [azapi_resource.route_server_ip_config_dynamic]
+  depends_on = [azapi_resource.route_server_ip_config]
 }
 
 #doing a forced read of the resource as the peer ips don't populate right away 
@@ -66,7 +73,7 @@ resource "azurerm_virtual_hub_bgp_connection" "this" {
   virtual_hub_id = azapi_resource.route_server_hub.id
 
   depends_on = [
-    azapi_resource.route_server_ip_config_dynamic
+    azapi_resource.route_server_ip_config
   ]
 }
 
@@ -84,7 +91,7 @@ resource "azurerm_role_assignment" "this" {
   skip_service_principal_aad_check       = each.value.skip_service_principal_aad_check
 
   depends_on = [
-    azapi_resource.route_server_ip_config_dynamic,
+    azapi_resource.route_server_ip_config,
     azurerm_virtual_hub_bgp_connection.this
   ]
 }
@@ -98,7 +105,7 @@ resource "azurerm_management_lock" "this" {
   notes      = var.lock.kind == "CanNotDelete" ? "Cannot delete the resource or its child resources." : "Cannot delete or modify the resource or its child resources."
 
   depends_on = [
-    azapi_resource.route_server_ip_config_dynamic,
+    azapi_resource.route_server_ip_config,
     azurerm_virtual_hub_bgp_connection.this
   ]
 }

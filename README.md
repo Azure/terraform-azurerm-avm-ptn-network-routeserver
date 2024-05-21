@@ -40,7 +40,7 @@ The following providers are used by this module:
 The following resources are used by this module:
 
 - [azapi_resource.route_server_hub](https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource) (resource)
-- [azapi_resource.route_server_ip_config_dynamic](https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource) (resource)
+- [azapi_resource.route_server_ip_config](https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource) (resource)
 - [azurerm_management_lock.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/management_lock) (resource)
 - [azurerm_public_ip.route_server_pip](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/public_ip) (resource)
 - [azurerm_resource_group_template_deployment.telemetry](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group_template_deployment) (resource)
@@ -200,6 +200,63 @@ map(object({
 ```
 
 Default: `{}`
+
+### <a name="input_routeserver_public_ip_config"></a> [routeserver\_public\_ip\_config](#input\_routeserver\_public\_ip\_config)
+
+Description: This object provides overrides for the routeserver's public IP. The defaults are the general best practice, but in rare cases it is necessary to override one or more of these defaults and this input provides that option.
+
+- `allocation_method`           = (Required) - Defines the allocation method for this IP address. Possible values are Static or Dynamic.
+- `ddos_protection_mode`        = (Optional) - The DDoS protection mode of the public IP. Possible values are Disabled, Enabled, and VirtualNetworkInherited. Defaults to VirtualNetworkInherited.
+- `ddos_protection_plan_id`     = (Optional) - The ID of DDoS protection plan associated with the public IP. ddos\_protection\_plan\_id can only be set when ddos\_protection\_mode is Enabled
+- `idle_timeout_in_minutes`     = (Optional) - Specifies the timeout for the TCP idle connection. The value can be set between 4 and 30 minutes.
+- `ip_tags`                     = (Optional) - A map of strings for ip tags associated with the routeserver public IP.
+- `ip_version`                  = (Optional) - The IP Version to use, IPv6 or IPv4. Changing this forces a new resource to be created. Only static IP address allocation is supported for IPv6.
+- `location`                    = (Optional) - The location to deploy the public IP resource into.  Defaults to the resource group location.
+- `name`                        = (Optional) - The name to use for the route Server's public IP. Defaults to the route server `name` with `-pip` appended if no value is provided.
+- `public_ip_prefix_resource_id = (Optional) - The Azure resource ID of the public IP prefix to use for allocation the public IP address from when using a public IP prefix.
+- `resource\_group\_name`         = (Optional) - The resource group name to use if deploying the routeserver public IP into a different resource group than the route server
+- `sku`                         = (Optional) - The SKU of the Public IP. Accepted values are Basic and Standard. Defaults to Standard to support zones by default. Changing this forces a new resource to be created. When sku_tier is set to Global, sku must be set to Standard.
+- `sku\_tier`                    = (Optional) - The SKU tier of the Public IP. Accepted values are Global and Regional. Defaults to Regional
+- `tags`                        = (Optional) - A mapping of tags to assign to this resource. Defaults to the module level tags variable configuration if undefined.
+- `zones`                       = (Optional) - The zones configuration to use for the route server public IP.  Defaults to a zonal configuration using all three zones. Modify this value if deploying into a region that doesn't support multiple zones.
+`
+
+Type:
+
+```hcl
+object({
+    allocation_method            = optional(string, "Static")
+    ddos_protection_mode         = optional(string, "VirtualNetworkInherited")
+    ddos_protection_plan_id      = optional(string, null)
+    ip_tags                      = optional(map(string), {})
+    ip_version                   = optional(string, "IPv4")
+    location                     = optional(string, null)
+    name                         = optional(string, null)
+    public_ip_prefix_resource_id = optional(string, null)
+    resource_group_name          = optional(string, null)
+    sku                          = optional(string, "Standard")
+    sku_tier                     = optional(string, "Regional")
+    tags                         = optional(map(string), {})
+    zones                        = optional(list(string), ["1", "2", "3"])
+  })
+```
+
+Default:
+
+```json
+{
+  "allocation_method": "Static",
+  "ddos_protection_mode": "VirtualNetworkInherited",
+  "ip_version": "IPv4",
+  "sku": "Standard",
+  "sku_tier": "Regional",
+  "zones": [
+    "1",
+    "2",
+    "3"
+  ]
+}
+```
 
 ### <a name="input_routeserver_public_ip_name"></a> [routeserver\_public\_ip\_name](#input\_routeserver\_public\_ip\_name)
 
