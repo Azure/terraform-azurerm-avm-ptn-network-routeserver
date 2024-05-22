@@ -1,5 +1,5 @@
 <!-- BEGIN_TF_DOCS -->
-# Default virtual network routeserver example
+# Default example
 
 This example deploys the module in the most common form.  It enables branch-to-branch and uses a dynamic private ip configuration.
 
@@ -9,7 +9,7 @@ terraform {
   required_providers {
     azapi = {
       source  = "Azure/azapi"
-      version = "~> 1.9"
+      version = "~> 1.13, != 1.13.0"
     }
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -23,13 +23,16 @@ terraform {
 }
 
 provider "azurerm" {
-  features {}
+  features {
+    resource_group {
+      prevent_deletion_if_contains_resources = false
+    }
+  }
 }
 
 provider "azapi" {
   enable_hcl_output_for_data_source = true
 }
-
 
 ## Section to provide a random Azure region for the resource group
 # This allows us to randomize the region for the resource group.
@@ -89,6 +92,10 @@ module "default" {
   route_server_subnet_resource_id = module.virtual_network.subnets["RouteServerSubnet"].id
   enable_branch_to_branch         = true
 
+  routeserver_public_ip_config = {
+    name = "routeserver-pip"
+  }
+
   enable_telemetry = var.enable_telemetry
 }
 
@@ -104,7 +111,7 @@ The following requirements are needed by this module:
 
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (~> 1.6)
 
-- <a name="requirement_azapi"></a> [azapi](#requirement\_azapi) (~> 1.9)
+- <a name="requirement_azapi"></a> [azapi](#requirement\_azapi) (~> 1.13, != 1.13.0)
 
 - <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 3.74)
 
