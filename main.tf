@@ -15,19 +15,19 @@ resource "azapi_resource" "route_server_hub" {
 }
 
 resource "azurerm_public_ip" "route_server_pip" {
-  allocation_method                = var.routeserver_public_ip_config.allocation_method
-  location                         = coalesce(var.routeserver_public_ip_config.location, var.location)
-  name                             = coalesce(var.routeserver_public_ip_config.name, "${var.name}-pip")
-  resource_group_name              = coalesce(var.routeserver_public_ip_config.resource_group_name, var.resource_group_name)
-  ddos_protection_mode             = var.routeserver_public_ip_config.ddos_protection_mode
-  ddos_protection_plan_resource_id = var.routeserver_public_ip_config.ddos_protection_plan_resource_id
-  ip_tags                          = var.routeserver_public_ip_config.ip_tags
-  ip_version                       = var.routeserver_public_ip_config.ip_version
-  public_ip_prefix_id              = var.routeserver_public_ip_config.public_ip_prefix_resource_id
-  sku                              = var.routeserver_public_ip_config.sku
-  sku_tier                         = var.routeserver_public_ip_config.sku_tier
-  tags                             = var.routeserver_public_ip_config.tags != {} ? var.routeserver_public_ip_config.tags : var.tags
-  zones                            = var.routeserver_public_ip_config.zones
+  allocation_method       = var.routeserver_public_ip_config.allocation_method
+  location                = coalesce(var.routeserver_public_ip_config.location, var.location)
+  name                    = coalesce(var.routeserver_public_ip_config.name, "${var.name}-pip")
+  resource_group_name     = coalesce(var.routeserver_public_ip_config.resource_group_name, var.resource_group_name)
+  ddos_protection_mode    = var.routeserver_public_ip_config.ddos_protection_mode
+  ddos_protection_plan_id = var.routeserver_public_ip_config.ddos_protection_plan_resource_id
+  ip_tags                 = var.routeserver_public_ip_config.ip_tags
+  ip_version              = var.routeserver_public_ip_config.ip_version
+  public_ip_prefix_id     = var.routeserver_public_ip_config.public_ip_prefix_resource_id
+  sku                     = var.routeserver_public_ip_config.sku
+  sku_tier                = var.routeserver_public_ip_config.sku_tier
+  tags                    = var.routeserver_public_ip_config.tags != {} ? var.routeserver_public_ip_config.tags : var.tags
+  zones                   = var.routeserver_public_ip_config.zones
 }
 
 resource "azapi_resource" "route_server_ip_config" {
