@@ -1,5 +1,4 @@
 locals {
-  # TODO: change this to the name of the module. See https://azure.github.io/Azure-Verified-Modules/specs/shared/#id-sfr3---category-telemetry---deploymentusage-telemetry
   module_name = "network-routeserver"
   module_type = "ptn"
   # This constructs the ARM deployment name that is used for the telemetry.
