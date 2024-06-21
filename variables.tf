@@ -42,10 +42,22 @@ variable "bgp_connections" {
   default     = {}
   description = <<DESCRIPTION
 A map of bgp connections to make on each route server."
+
 - `<map key>` - An arbitrary map key to differentiate each instance of the map.
   - `name` - (Required) - The name to use for the bgp connection
   - `peer_asn` - (Required) - The ASN for the peer NVA
   - `peer_ip` - (Required) - The IP address for the peer NVA
+
+Example Input:
+```hcl
+bgp_connections = {
+  cisco_8k = {
+    name     = module.cisco_8k.virtual_machine.name
+    peer_asn = "65111"
+    peer_ip  = "10.0.2.5"
+  }
+}
+```
 DESCRIPTION
   nullable    = false
 }
@@ -83,6 +95,14 @@ Controls the Resource Lock configuration for this resource. The following proper
 
 - `kind` - (Required) The type of lock. Possible values are `\"CanNotDelete\"` and `\"ReadOnly\"`.
 - `name` - (Optional) The name of the lock. If not specified, a name will be generated based on the `kind` value. Changing this forces the creation of a new resource.
+
+Example Input:
+```hcl
+lock = {
+  kind = "CanNotDelete"
+  name = "example-delete-lock"
+}
+```
 DESCRIPTION
 
   validation {
@@ -129,6 +149,17 @@ A map of role assignments to create on the <RESOURCE>. The map key is deliberate
 - `principal_type` - (Optional) The type of the `principal_id`. Possible values are `User`, `Group` and `ServicePrincipal`. It is necessary to explicitly set this attribute when creating role assignments if the principal creating the assignment is constrained by ABAC rules that filters on the PrincipalType attribute.
 
 > Note: only set `skip_service_principal_aad_check` to true if you are assigning a role to a service principal.
+
+Example Input
+```hcl
+role_assignments = {
+  role_assignment_1 = {
+    principal_id               = data.azurerm_client_config.current.object_id
+    role_definition_id_or_name = "Contributor"
+    description                = "Assign the Contributor role to the deployment user on this route server resource scope."
+  }
+}
+```
 DESCRIPTION  
   nullable    = false
 }
@@ -174,6 +205,18 @@ This object provides overrides for the routeserver's public IP. The defaults are
 - `sku_tier`                    = (Optional) - The SKU tier of the Public IP. Accepted values are Global and Regional. Defaults to Regional
 - `tags`                        = (Optional) - A mapping of tags to assign to this resource. Defaults to the module level tags variable configuration if undefined.
 - `zones`                       = (Optional) - The zones configuration to use for the route server public IP.  Defaults to a zonal configuration using all three zones. Modify this value if deploying into a region that doesn't support multiple zones.
+
+Example Input:
+```hcl
+routeserver_public_ip_config = {
+  name              = "routeserver-pip"
+  allocation_method = "Static"
+  ip_version        = "IPv4"
+  sku               = "Standard"
+  sku_tier          = "Regional"
+  zones             = ["1", "2", "3"]
+}
+```
 DESCRIPTION
   nullable    = false
 }
