@@ -17,7 +17,7 @@ The following requirements are needed by this module:
 
 - <a name="requirement_azapi"></a> [azapi](#requirement\_azapi) (~> 1.13, != 1.13.0)
 
-- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 3.74)
+- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 3.108)
 
 - <a name="requirement_random"></a> [random](#requirement\_random) (~> 3.5)
 
@@ -29,7 +29,7 @@ The following providers are used by this module:
 
 - <a name="provider_azapi"></a> [azapi](#provider\_azapi) (~> 1.13, != 1.13.0)
 
-- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (~> 3.74)
+- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (~> 3.108)
 
 - <a name="provider_random"></a> [random](#provider\_random) (~> 3.5)
 
@@ -92,10 +92,22 @@ The following input variables are optional (have default values):
 ### <a name="input_bgp_connections"></a> [bgp\_connections](#input\_bgp\_connections)
 
 Description: A map of bgp connections to make on each route server."
+
 - `<map key>` - An arbitrary map key to differentiate each instance of the map.
   - `name` - (Required) - The name to use for the bgp connection
   - `peer_asn` - (Required) - The ASN for the peer NVA
   - `peer_ip` - (Required) - The IP address for the peer NVA
+
+Example Input:
+```hcl
+bgp_connections = {
+  cisco_8k = {
+    name     = module.cisco_8k.virtual_machine.name
+    peer_asn = "65111"
+    peer_ip  = "10.0.2.5"
+  }
+}
+```
 
 Type:
 
@@ -142,6 +154,14 @@ Description: Controls the Resource Lock configuration for this resource. The fol
 - `kind` - (Required) The type of lock. Possible values are `\"CanNotDelete\"` and `\"ReadOnly\"`.
 - `name` - (Optional) The name of the lock. If not specified, a name will be generated based on the `kind` value. Changing this forces the creation of a new resource.
 
+Example Input:
+```hcl
+lock = {
+  kind = "CanNotDelete"
+  name = "example-delete-lock"
+}
+```
+
 Type:
 
 ```hcl
@@ -184,6 +204,17 @@ Description: A map of role assignments to create on the <RESOURCE>. The map key 
 
 > Note: only set `skip_service_principal_aad_check` to true if you are assigning a role to a service principal.
 
+Example Input
+```hcl
+role_assignments = {
+  role_assignment_1 = {
+    principal_id               = data.azurerm_client_config.current.object_id
+    role_definition_id_or_name = "Contributor"
+    description                = "Assign the Contributor role to the deployment user on this route server resource scope."
+  }
+}
+```
+
 Type:
 
 ```hcl
@@ -207,7 +238,7 @@ Description: This object provides overrides for the routeserver's public IP. The
 
 - `allocation_method`           = (Required) - Defines the allocation method for this IP address. Possible values are Static or Dynamic.
 - `ddos_protection_mode`        = (Optional) - The DDoS protection mode of the public IP. Possible values are Disabled, Enabled, and VirtualNetworkInherited. Defaults to VirtualNetworkInherited.
-- `ddos_protection_plan_id`     = (Optional) - The ID of DDoS protection plan associated with the public IP. ddos\_protection\_plan\_id can only be set when ddos\_protection\_mode is Enabled
+- `ddos_protection_plan_resource_id`     = (Optional) - The ID of DDoS protection plan associated with the public IP. ddos\_protection\_plan\_resource\_id can only be set when ddos\_protection\_mode is Enabled
 - `idle_timeout_in_minutes`     = (Optional) - Specifies the timeout for the TCP idle connection. The value can be set between 4 and 30 minutes.
 - `ip_tags`                     = (Optional) - A map of strings for ip tags associated with the routeserver public IP.
 - `ip_version`                  = (Optional) - The IP Version to use, IPv6 or IPv4. Changing this forces a new resource to be created. Only static IP address allocation is supported for IPv6.
@@ -219,25 +250,36 @@ Description: This object provides overrides for the routeserver's public IP. The
 - `sku\_tier`                    = (Optional) - The SKU tier of the Public IP. Accepted values are Global and Regional. Defaults to Regional
 - `tags`                        = (Optional) - A mapping of tags to assign to this resource. Defaults to the module level tags variable configuration if undefined.
 - `zones`                       = (Optional) - The zones configuration to use for the route server public IP.  Defaults to a zonal configuration using all three zones. Modify this value if deploying into a region that doesn't support multiple zones.
-`
+
+Example Input:
+````hcl
+routeserver_public_ip_config = {
+  name              = "routeserver-pip"
+  allocation_method = "Static"
+  ip_version        = "IPv4"
+  sku               = "Standard"
+  sku_tier          = "Regional"
+  zones             = ["1", "2", "3"]
+}
+```
 
 Type:
 
 ```hcl
 object({
-    allocation_method            = optional(string, "Static")
-    ddos_protection_mode         = optional(string, "VirtualNetworkInherited")
-    ddos_protection_plan_id      = optional(string, null)
-    ip_tags                      = optional(map(string), {})
-    ip_version                   = optional(string, "IPv4")
-    location                     = optional(string, null)
-    name                         = optional(string, null)
-    public_ip_prefix_resource_id = optional(string, null)
-    resource_group_name          = optional(string, null)
-    sku                          = optional(string, "Standard")
-    sku_tier                     = optional(string, "Regional")
-    tags                         = optional(map(string), {})
-    zones                        = optional(list(string), ["1", "2", "3"])
+    allocation_method                = optional(string, "Static")
+    ddos_protection_mode             = optional(string, "VirtualNetworkInherited")
+    ddos_protection_plan_resource_id = optional(string, null)
+    ip_tags                          = optional(map(string), {})
+    ip_version                       = optional(string, "IPv4")
+    location                         = optional(string, null)
+    name                             = optional(string, null)
+    public_ip_prefix_resource_id     = optional(string, null)
+    resource_group_name              = optional(string, null)
+    sku                              = optional(string, "Standard")
+    sku_tier                         = optional(string, "Regional")
+    tags                             = optional(map(string), {})
+    zones                            = optional(list(string), ["1", "2", "3"])
   })
 ```
 
@@ -257,14 +299,6 @@ Default:
   ]
 }
 ```
-
-### <a name="input_routeserver_public_ip_name"></a> [routeserver\_public\_ip\_name](#input\_routeserver\_public\_ip\_name)
-
-Description: The name for the public ip address resource associated with the route server.
-
-Type: `string`
-
-Default: `null`
 
 ### <a name="input_tags"></a> [tags](#input\_tags)
 
@@ -291,7 +325,7 @@ Description: This is the full output for the resource. It contains the following
 
 ### <a name="output_resource_id"></a> [resource\_id](#output\_resource\_id)
 
-Description: n/a
+Description: The Azure Resource ID for the route server resource.
 
 ## Modules
 

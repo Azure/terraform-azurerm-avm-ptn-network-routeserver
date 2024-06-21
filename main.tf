@@ -20,7 +20,7 @@ resource "azurerm_public_ip" "route_server_pip" {
   name                    = coalesce(var.routeserver_public_ip_config.name, "${var.name}-pip")
   resource_group_name     = coalesce(var.routeserver_public_ip_config.resource_group_name, var.resource_group_name)
   ddos_protection_mode    = var.routeserver_public_ip_config.ddos_protection_mode
-  ddos_protection_plan_id = var.routeserver_public_ip_config.ddos_protection_plan_id
+  ddos_protection_plan_id = var.routeserver_public_ip_config.ddos_protection_plan_resource_id
   ip_tags                 = var.routeserver_public_ip_config.ip_tags
   ip_version              = var.routeserver_public_ip_config.ip_version
   public_ip_prefix_id     = var.routeserver_public_ip_config.public_ip_prefix_resource_id

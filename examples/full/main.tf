@@ -1,38 +1,8 @@
-terraform {
-  required_version = "~> 1.6"
-  required_providers {
-    azapi = {
-      source  = "Azure/azapi"
-      version = "~> 1.13, != 1.13.0"
-    }
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 3.74"
-    }
-    random = {
-      source  = "hashicorp/random"
-      version = "~> 3.5"
-    }
-  }
-}
-
-provider "azurerm" {
-  features {
-    resource_group {
-      prevent_deletion_if_contains_resources = false
-    }
-  }
-}
-
-provider "azapi" {
-  enable_hcl_output_for_data_source = true
-}
-
 ## Section to provide a random Azure region for the resource group
 # This allows us to randomize the region for the resource group.
 module "regions" {
   source  = "Azure/regions/azurerm"
-  version = "~> 0.3"
+  version = "~> 0.7"
 }
 
 # This allows us to randomize the region for the resource group.
@@ -45,7 +15,7 @@ resource "random_integer" "region_index" {
 # This ensures we have unique CAF compliant names for our resources.
 module "naming" {
   source  = "Azure/naming/azurerm"
-  version = "~> 0.3"
+  version = "~> 0.4"
 }
 
 resource "azurerm_resource_group" "this" {
@@ -88,8 +58,9 @@ module "virtual_network" {
 }
 
 module "avm_res_keyvault_vault" {
-  source              = "Azure/avm-res-keyvault-vault/azurerm"
-  version             = ">= 0.5.0"
+  source  = "Azure/avm-res-keyvault-vault/azurerm"
+  version = "0.6.2"
+
   tenant_id           = data.azurerm_client_config.current.tenant_id
   name                = module.naming.key_vault.name_unique
   resource_group_name = azurerm_resource_group.this.name
@@ -131,7 +102,7 @@ data "azapi_resource_action" "plans" {
 }
 
 resource "azurerm_marketplace_agreement" "cisco" {
-  count = data.azapi_resource_action.plans.output.properties.accepted == true ? 0 : 1
+  count = jsondecode(data.azapi_resource_action.plans.output).properties.accepted == true ? 0 : 1
 
   offer     = local.offer
   plan      = local.plan
@@ -141,21 +112,25 @@ resource "azurerm_marketplace_agreement" "cisco" {
 #create a cisco 8k nva for demonstrating bgp peers
 module "cisco_8k" {
   source  = "Azure/avm-res-compute-virtualmachine/azurerm"
-  version = "0.13.0"
+  version = "0.15.0"
 
-  admin_credential_key_vault_resource_id = module.avm_res_keyvault_vault.resource.id
-  admin_username                         = "azureuser"
-  disable_password_authentication        = false
-  enable_telemetry                       = var.enable_telemetry
-  encryption_at_host_enabled             = true
-  generate_admin_password_or_ssh_key     = true
-  name                                   = module.naming.virtual_machine.name_unique
-  resource_group_name                    = azurerm_resource_group.this.name
-  location                               = azurerm_resource_group.this.location
-  virtualmachine_os_type                 = "Linux"
-  virtualmachine_sku_size                = "Standard_F4s_v2"
-  zone                                   = "1"
-  custom_data                            = base64encode(data.template_file.node_config.rendered)
+  admin_username                     = "azureuser"
+  disable_password_authentication    = false
+  enable_telemetry                   = var.enable_telemetry
+  encryption_at_host_enabled         = true
+  generate_admin_password_or_ssh_key = true
+  name                               = module.naming.virtual_machine.name_unique
+  resource_group_name                = azurerm_resource_group.this.name
+  location                           = azurerm_resource_group.this.location
+  os_type                            = "Linux"
+  sku_size                           = "Standard_F4s_v2"
+  zone                               = "1"
+  custom_data                        = base64encode(data.template_file.node_config.rendered)
+
+  generated_secrets_key_vault_secret_config = {
+    name                  = "${module.naming.virtual_machine.name_unique}-password"
+    key_vault_resource_id = module.avm_res_keyvault_vault.resource_id
+  }
 
   network_interfaces = {
     network_interface_0 = {
@@ -209,7 +184,7 @@ data "azurerm_client_config" "current" {}
 module "full_route_server" {
   source = "../.."
   # source             = "Azure/avm-res-network-routeserver/azurerm"
-  # version            = "0.1.1"
+  # version            = "0.1.2"
 
   enable_branch_to_branch         = true
   enable_telemetry                = var.enable_telemetry

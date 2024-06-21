@@ -13,5 +13,6 @@ DESCRIPTION
 }
 
 output "resource_id" {
-  value = azapi_resource.route_server_hub.id
+  description = "The Azure Resource ID for the route server resource."
+  value       = azapi_resource.route_server_hub.id
 }

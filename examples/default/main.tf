@@ -1,38 +1,8 @@
-terraform {
-  required_version = "~> 1.6"
-  required_providers {
-    azapi = {
-      source  = "Azure/azapi"
-      version = "~> 1.13, != 1.13.0"
-    }
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 3.74"
-    }
-    random = {
-      source  = "hashicorp/random"
-      version = "~> 3.5"
-    }
-  }
-}
-
-provider "azurerm" {
-  features {
-    resource_group {
-      prevent_deletion_if_contains_resources = false
-    }
-  }
-}
-
-provider "azapi" {
-  enable_hcl_output_for_data_source = true
-}
-
 ## Section to provide a random Azure region for the resource group
 # This allows us to randomize the region for the resource group.
 module "regions" {
   source  = "Azure/regions/azurerm"
-  version = "~> 0.3"
+  version = "~> 0.7"
 }
 
 # This allows us to randomize the region for the resource group.
@@ -45,7 +15,7 @@ resource "random_integer" "region_index" {
 # This ensures we have unique CAF compliant names for our resources.
 module "naming" {
   source  = "Azure/naming/azurerm"
-  version = "~> 0.3"
+  version = "~> 0.4"
 }
 
 # This is required for resource modules
@@ -76,7 +46,7 @@ module "virtual_network" {
 module "default" {
   source = "../.."
   # source             = "Azure/avm-res-network-routeserver/azurerm"
-  # version            = "0.1.1"
+  # version            = "0.1.2"
 
   location                        = azurerm_resource_group.this.location
   name                            = "${module.naming.virtual_wan.name_unique}-rs"
