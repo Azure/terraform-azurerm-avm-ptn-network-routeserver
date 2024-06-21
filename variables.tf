@@ -135,19 +135,19 @@ DESCRIPTION
 
 variable "routeserver_public_ip_config" {
   type = object({
-    allocation_method            = optional(string, "Static")
-    ddos_protection_mode         = optional(string, "VirtualNetworkInherited")
-    ddos_protection_plan_id      = optional(string, null)
-    ip_tags                      = optional(map(string), {})
-    ip_version                   = optional(string, "IPv4")
-    location                     = optional(string, null)
-    name                         = optional(string, null)
-    public_ip_prefix_resource_id = optional(string, null)
-    resource_group_name          = optional(string, null)
-    sku                          = optional(string, "Standard")
-    sku_tier                     = optional(string, "Regional")
-    tags                         = optional(map(string), {})
-    zones                        = optional(list(string), ["1", "2", "3"])
+    allocation_method                = optional(string, "Static")
+    ddos_protection_mode             = optional(string, "VirtualNetworkInherited")
+    ddos_protection_plan_resource_id = optional(string, null)
+    ip_tags                          = optional(map(string), {})
+    ip_version                       = optional(string, "IPv4")
+    location                         = optional(string, null)
+    name                             = optional(string, null)
+    public_ip_prefix_resource_id     = optional(string, null)
+    resource_group_name              = optional(string, null)
+    sku                              = optional(string, "Standard")
+    sku_tier                         = optional(string, "Regional")
+    tags                             = optional(map(string), {})
+    zones                            = optional(list(string), ["1", "2", "3"])
   })
   default = {
     allocation_method    = "Static"
@@ -162,7 +162,7 @@ This object provides overrides for the routeserver's public IP. The defaults are
 
 - `allocation_method`           = (Required) - Defines the allocation method for this IP address. Possible values are Static or Dynamic.
 - `ddos_protection_mode`        = (Optional) - The DDoS protection mode of the public IP. Possible values are Disabled, Enabled, and VirtualNetworkInherited. Defaults to VirtualNetworkInherited.
-- `ddos_protection_plan_id`     = (Optional) - The ID of DDoS protection plan associated with the public IP. ddos_protection_plan_id can only be set when ddos_protection_mode is Enabled
+- `ddos_protection_plan_resource_id`     = (Optional) - The ID of DDoS protection plan associated with the public IP. ddos_protection_plan_resource_id can only be set when ddos_protection_mode is Enabled
 - `idle_timeout_in_minutes`     = (Optional) - Specifies the timeout for the TCP idle connection. The value can be set between 4 and 30 minutes.
 - `ip_tags`                     = (Optional) - A map of strings for ip tags associated with the routeserver public IP.
 - `ip_version`                  = (Optional) - The IP Version to use, IPv6 or IPv4. Changing this forces a new resource to be created. Only static IP address allocation is supported for IPv6.
