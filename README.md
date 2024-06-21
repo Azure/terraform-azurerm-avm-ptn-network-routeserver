@@ -258,14 +258,6 @@ Default:
 }
 ```
 
-### <a name="input_routeserver_public_ip_name"></a> [routeserver\_public\_ip\_name](#input\_routeserver\_public\_ip\_name)
-
-Description: The name for the public ip address resource associated with the route server.
-
-Type: `string`
-
-Default: `null`
-
 ### <a name="input_tags"></a> [tags](#input\_tags)
 
 Description: (Optional) - The map of tags to be applied to the resource
@@ -291,7 +283,7 @@ Description: This is the full output for the resource. It contains the following
 
 ### <a name="output_resource_id"></a> [resource\_id](#output\_resource\_id)
 
-Description: n/a
+Description: The Azure Resource ID for the route server resource.
 
 ## Modules
 

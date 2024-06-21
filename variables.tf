@@ -178,12 +178,6 @@ DESCRIPTION
   nullable    = false
 }
 
-variable "routeserver_public_ip_name" {
-  type        = string
-  default     = null
-  description = "The name for the public ip address resource associated with the route server."
-}
-
 # tflint-ignore: terraform_unused_declarations
 variable "tags" {
   type        = map(string)

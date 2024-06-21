@@ -11,32 +11,6 @@ This example demonstrates each feature of the module.  It includes the follow fe
 - Creates a BGP connection between the route server and the NVA virtual machine
 
 ```hcl
-terraform {
-  required_version = "~> 1.6"
-  required_providers {
-    azapi = {
-      source  = "Azure/azapi"
-      version = "~> 1.13, != 1.13.0"
-    }
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 3.108"
-    }
-    random = {
-      source  = "hashicorp/random"
-      version = "~> 3.5"
-    }
-  }
-}
-
-provider "azurerm" {
-  features {
-    resource_group {
-      prevent_deletion_if_contains_resources = false
-    }
-  }
-}
-
 ## Section to provide a random Azure region for the resource group
 # This allows us to randomize the region for the resource group.
 module "regions" {
@@ -291,6 +265,8 @@ The following requirements are needed by this module:
 
 - <a name="requirement_random"></a> [random](#requirement\_random) (~> 3.5)
 
+- <a name="requirement_template"></a> [template](#requirement\_template) (~> 2.2)
+
 ## Providers
 
 The following providers are used by this module:
@@ -301,7 +277,7 @@ The following providers are used by this module:
 
 - <a name="provider_random"></a> [random](#provider\_random) (~> 3.5)
 
-- <a name="provider_template"></a> [template](#provider\_template)
+- <a name="provider_template"></a> [template](#provider\_template) (~> 2.2)
 
 ## Resources
 
