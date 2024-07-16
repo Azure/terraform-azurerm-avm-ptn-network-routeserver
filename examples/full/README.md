@@ -72,7 +72,7 @@ module "virtual_network" {
 
 module "avm_res_keyvault_vault" {
   source  = "Azure/avm-res-keyvault-vault/azurerm"
-  version = "0.6.2"
+  version = "0.7.1"
 
   tenant_id           = data.azurerm_client_config.current.tenant_id
   name                = module.naming.key_vault.name_unique
@@ -90,7 +90,7 @@ module "avm_res_keyvault_vault" {
   }
 
   wait_for_rbac_before_secret_operations = {
-    create = "60s"
+    create = "90s"
   }
 
   tags = {
@@ -327,7 +327,7 @@ The following Modules are called:
 
 Source: Azure/avm-res-keyvault-vault/azurerm
 
-Version: 0.6.2
+Version: 0.7.1
 
 ### <a name="module_cisco_8k"></a> [cisco\_8k](#module\_cisco\_8k)
 
