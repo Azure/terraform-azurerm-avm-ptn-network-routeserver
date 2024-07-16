@@ -57,6 +57,16 @@ module "virtual_network" {
   }
 }
 
+resource "random_password" "admin_password" {
+  length           = 22
+  min_lower        = 2
+  min_numeric      = 2
+  min_special      = 2
+  min_upper        = 2
+  override_special = "!#$%&()*+,-./:;<=>?@[]^_{|}~"
+  special          = true
+}
+
 module "avm_res_keyvault_vault" {
   source  = "Azure/avm-res-keyvault-vault/azurerm"
   version = "0.7.1"
@@ -76,8 +86,18 @@ module "avm_res_keyvault_vault" {
     }
   }
 
+  secrets = {
+    admin_password = {
+      name = "admin-password"
+    }
+  }
+
+  secrets_value = {
+    admin_password = random_password.admin_password.result
+  }
+
   wait_for_rbac_before_secret_operations = {
-    create = "90s"
+    create = "60s"
   }
 
   tags = {
@@ -115,10 +135,11 @@ module "cisco_8k" {
   version = "0.15.0"
 
   admin_username                     = "azureuser"
+  admin_password                     = random_password.admin_password.result
   disable_password_authentication    = false
   enable_telemetry                   = var.enable_telemetry
   encryption_at_host_enabled         = true
-  generate_admin_password_or_ssh_key = true
+  generate_admin_password_or_ssh_key = false
   name                               = module.naming.virtual_machine.name_unique
   resource_group_name                = azurerm_resource_group.this.name
   location                           = azurerm_resource_group.this.location
@@ -126,11 +147,6 @@ module "cisco_8k" {
   sku_size                           = "Standard_F4s_v2"
   zone                               = "1"
   custom_data                        = base64encode(data.template_file.node_config.rendered)
-
-  generated_secrets_key_vault_secret_config = {
-    name                  = "${module.naming.virtual_machine.name_unique}-password"
-    key_vault_resource_id = module.avm_res_keyvault_vault.resource_id
-  }
 
   network_interfaces = {
     network_interface_0 = {
