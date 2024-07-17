@@ -70,9 +70,19 @@ module "virtual_network" {
   }
 }
 
+resource "random_password" "admin_password" {
+  length           = 22
+  min_lower        = 2
+  min_numeric      = 2
+  min_special      = 2
+  min_upper        = 2
+  override_special = "!#$%&()*+,-./:;<=>?@[]^_{|}~"
+  special          = true
+}
+
 module "avm_res_keyvault_vault" {
   source  = "Azure/avm-res-keyvault-vault/azurerm"
-  version = "0.6.2"
+  version = "0.7.1"
 
   tenant_id           = data.azurerm_client_config.current.tenant_id
   name                = module.naming.key_vault.name_unique
@@ -87,6 +97,16 @@ module "avm_res_keyvault_vault" {
       role_definition_id_or_name = "Key Vault Secrets Officer"
       principal_id               = data.azurerm_client_config.current.object_id
     }
+  }
+
+  secrets = {
+    admin_password = {
+      name = "admin-password"
+    }
+  }
+
+  secrets_value = {
+    admin_password = random_password.admin_password.result
   }
 
   wait_for_rbac_before_secret_operations = {
@@ -128,10 +148,11 @@ module "cisco_8k" {
   version = "0.15.0"
 
   admin_username                     = "azureuser"
+  admin_password                     = random_password.admin_password.result
   disable_password_authentication    = false
   enable_telemetry                   = var.enable_telemetry
   encryption_at_host_enabled         = true
-  generate_admin_password_or_ssh_key = true
+  generate_admin_password_or_ssh_key = false
   name                               = module.naming.virtual_machine.name_unique
   resource_group_name                = azurerm_resource_group.this.name
   location                           = azurerm_resource_group.this.location
@@ -139,11 +160,6 @@ module "cisco_8k" {
   sku_size                           = "Standard_F4s_v2"
   zone                               = "1"
   custom_data                        = base64encode(data.template_file.node_config.rendered)
-
-  generated_secrets_key_vault_secret_config = {
-    name                  = "${module.naming.virtual_machine.name_unique}-password"
-    key_vault_resource_id = module.avm_res_keyvault_vault.resource_id
-  }
 
   network_interfaces = {
     network_interface_0 = {
@@ -287,6 +303,7 @@ The following resources are used by this module:
 - [azurerm_marketplace_agreement.cisco](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/marketplace_agreement) (resource)
 - [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
 - [random_integer.region_index](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)
+- [random_password.admin_password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) (resource)
 - [azapi_resource_action.plans](https://registry.terraform.io/providers/Azure/azapi/latest/docs/data-sources/resource_action) (data source)
 - [azurerm_client_config.current](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config) (data source)
 - [azurerm_subscription.current](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/subscription) (data source)
@@ -327,7 +344,7 @@ The following Modules are called:
 
 Source: Azure/avm-res-keyvault-vault/azurerm
 
-Version: 0.6.2
+Version: 0.7.1
 
 ### <a name="module_cisco_8k"></a> [cisco\_8k](#module\_cisco\_8k)
 
