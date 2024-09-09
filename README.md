@@ -25,20 +25,6 @@ The following requirements are needed by this module:
 
 - <a name="requirement_time"></a> [time](#requirement\_time) (~> 0.10)
 
-## Providers
-
-The following providers are used by this module:
-
-- <a name="provider_azapi"></a> [azapi](#provider\_azapi) (~> 1.13, != 1.13.0)
-
-- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (~> 3.108)
-
-- <a name="provider_modtm"></a> [modtm](#provider\_modtm) (~> 0.3)
-
-- <a name="provider_random"></a> [random](#provider\_random) (~> 3.5)
-
-- <a name="provider_time"></a> [time](#provider\_time) (~> 0.10)
-
 ## Resources
 
 The following resources are used by this module:
