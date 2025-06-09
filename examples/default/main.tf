@@ -34,9 +34,11 @@ module "virtual_network" {
   name                = module.naming.virtual_network.name_unique
   subnets = {
     "GatewaySubnet" = {
+      name             = "GatewaySubnet"
       address_prefixes = ["10.0.0.0/24"]
     }
     "RouteServerSubnet" = {
+      name             = "RouteServerSubnet"
       address_prefixes = ["10.0.1.0/24"]
     }
   }
