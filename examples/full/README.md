@@ -40,7 +40,7 @@ data "template_file" "node_config" {
   template = file("${path.module}/ios_config_template.txt")
   vars = {
     nic_0_ip_address = "10.0.2.5"
-    nic_0_netmask    = cidrnetmask(module.virtual_network.subnets["NVASubnet"].resource.output.properties.address_prefixes[0])
+    nic_0_netmask    = cidrnetmask(module.virtual_network.subnets["NVASubnet"].resource.output.properties.addressPrefixes[0])
     asn              = "65111"
     router_id        = "65.1.1.1"
     avs_ars_ip_0     = module.full_route_server.resource.virtual_router_ips[0]
