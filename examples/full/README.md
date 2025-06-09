@@ -40,7 +40,7 @@ data "template_file" "node_config" {
   template = file("${path.module}/ios_config_template.txt")
   vars = {
     nic_0_ip_address = "10.0.2.5"
-    nic_0_netmask    = cidrnetmask(module.virtual_network.subnets["NVASubnet"].resource.properties.address_prefixes[0])
+    nic_0_netmask    = cidrnetmask(module.virtual_network.subnets["NVASubnet"].resource.output.properties.address_prefixes[0])
     asn              = "65111"
     router_id        = "65.1.1.1"
     avs_ars_ip_0     = module.full_route_server.resource.virtual_router_ips[0]
@@ -142,7 +142,7 @@ resource "azurerm_marketplace_agreement" "cisco" {
 #create a cisco 8k nva for demonstrating bgp peers
 module "cisco_8k" {
   source  = "Azure/avm-res-compute-virtualmachine/azurerm"
-  version = "0.15.0"
+  version = "0.18.0"
 
   location = azurerm_resource_group.this.location
   name     = module.naming.virtual_machine.name_unique
@@ -313,7 +313,7 @@ Version: 0.10.0
 
 Source: Azure/avm-res-compute-virtualmachine/azurerm
 
-Version: 0.15.0
+Version: 0.18.0
 
 ### <a name="module_full_route_server"></a> [full\_route\_server](#module\_full\_route\_server)
 
