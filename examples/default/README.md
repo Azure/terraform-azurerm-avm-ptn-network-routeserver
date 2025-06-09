@@ -7,8 +7,8 @@ This example deploys the module in the most common form.  It enables branch-to-b
 ## Section to provide a random Azure region for the resource group
 # This allows us to randomize the region for the resource group.
 module "regions" {
-  source  = "Azure/regions/azurerm"
-  version = "~> 0.7"
+  source  = "Azure/avm-utl-regions/azurerm"
+  version = "0.5.2"
 }
 
 # This allows us to randomize the region for the resource group.
@@ -32,13 +32,12 @@ resource "azurerm_resource_group" "this" {
 
 module "virtual_network" {
   source  = "Azure/avm-res-network-virtualnetwork/azurerm"
-  version = "0.1.4"
+  version = "0.8.1"
 
-  name                          = module.naming.virtual_network.name_unique
-  resource_group_name           = azurerm_resource_group.this.name
-  location                      = azurerm_resource_group.this.location
-  virtual_network_address_space = ["10.0.0.0/16"]
-
+  address_space       = ["10.0.0.0/16"]
+  location            = azurerm_resource_group.this.location
+  resource_group_name = azurerm_resource_group.this.name
+  name                = module.naming.virtual_network.name_unique
   subnets = {
     "GatewaySubnet" = {
       address_prefixes = ["10.0.0.0/24"]
@@ -51,27 +50,20 @@ module "virtual_network" {
 
 module "default" {
   source = "../.."
-  # source             = "Azure/avm-res-network-routeserver/azurerm"
-  # version            = "0.1.2"
 
   location                        = azurerm_resource_group.this.location
   name                            = "${module.naming.virtual_wan.name_unique}-rs"
   resource_group_name             = azurerm_resource_group.this.name
   resource_group_resource_id      = azurerm_resource_group.this.id
-  private_ip_allocation_method    = "Dynamic"
   route_server_subnet_resource_id = module.virtual_network.subnets["RouteServerSubnet"].id
   enable_branch_to_branch         = true
-
+  enable_telemetry                = var.enable_telemetry
+  private_ip_allocation_method    = "Dynamic"
   routeserver_public_ip_config = {
     name = "routeserver-pip"
   }
-
-  enable_telemetry = var.enable_telemetry
 }
 
-output "resource_output" {
-  value = module.default.resource
-}
 ```
 
 <!-- markdownlint-disable MD033 -->
@@ -79,9 +71,9 @@ output "resource_output" {
 
 The following requirements are needed by this module:
 
-- <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (~> 1.6)
+- <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (~> 1.9)
 
-- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 3.108)
+- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>= 3.115, < 5.0)
 
 - <a name="requirement_random"></a> [random](#requirement\_random) (~> 3.5)
 
@@ -137,15 +129,15 @@ Version: ~> 0.4
 
 ### <a name="module_regions"></a> [regions](#module\_regions)
 
-Source: Azure/regions/azurerm
+Source: Azure/avm-utl-regions/azurerm
 
-Version: ~> 0.7
+Version: 0.5.2
 
 ### <a name="module_virtual_network"></a> [virtual\_network](#module\_virtual\_network)
 
 Source: Azure/avm-res-network-virtualnetwork/azurerm
 
-Version: 0.1.4
+Version: 0.8.1
 
 <!-- markdownlint-disable-next-line MD041 -->
 ## Data Collection
