@@ -119,7 +119,7 @@ data "azapi_resource_action" "plans" {
 }
 
 resource "azurerm_marketplace_agreement" "cisco" {
-  count = jsondecode(data.azapi_resource_action.plans.output).properties.accepted == true ? 0 : 1
+  count = data.azapi_resource_action.plans.output.properties.accepted == true ? 0 : 1
 
   offer     = local.offer
   plan      = local.plan
@@ -144,7 +144,7 @@ module "cisco_8k" {
           private_ip_address            = "10.0.2.5"
           private_ip_address_version    = "IPv4"
           private_ip_address_allocation = "Static"
-          private_ip_subnet_resource_id = module.virtual_network.subnets["NVASubnet"].id
+          private_ip_subnet_resource_id = module.virtual_network.subnets["NVASubnet"].resource_id
           is_primary_ipconfiguration    = true
         }
       }
@@ -196,7 +196,7 @@ module "full_route_server" {
   name                            = "${module.naming.virtual_wan.name_unique}-rs"
   resource_group_name             = azurerm_resource_group.this.name
   resource_group_resource_id      = azurerm_resource_group.this.id
-  route_server_subnet_resource_id = module.virtual_network.subnets["RouteServerSubnet"].id
+  route_server_subnet_resource_id = module.virtual_network.subnets["RouteServerSubnet"].resource_id
   bgp_connections = {
     cisco_8k = {
       name     = module.cisco_8k.virtual_machine.name
