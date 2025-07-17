@@ -10,8 +10,12 @@ resource "azapi_resource" "route_server_hub" {
       allowBranchToBranchTraffic = var.enable_branch_to_branch
     }
   }
+  create_headers            = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
+  delete_headers            = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
+  read_headers              = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
   response_export_values    = ["*"]
   schema_validation_enabled = false
+  update_headers            = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
 }
 
 resource "azurerm_public_ip" "route_server_pip" {
@@ -46,8 +50,12 @@ resource "azapi_resource" "route_server_ip_config" {
       privateIpAddress          = (lower(var.private_ip_allocation_method) == "static" ? var.private_ip_address : null)
     }
   }
+  create_headers            = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
+  delete_headers            = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
+  read_headers              = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
   response_export_values    = ["*"]
   schema_validation_enabled = false
+  update_headers            = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
 }
 
 resource "time_sleep" "wait_300_seconds" {
