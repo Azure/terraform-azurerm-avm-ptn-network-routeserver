@@ -117,4 +117,3 @@ resource "azurerm_management_lock" "this" {
     azurerm_virtual_hub_bgp_connection.this
   ]
 }
-
