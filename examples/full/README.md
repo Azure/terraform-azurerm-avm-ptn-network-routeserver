@@ -16,7 +16,7 @@ This example demonstrates each feature of the module.  It includes the follow fe
 # This allows us to randomize the region for the resource group.
 module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
-  version = "0.5.2"
+  version = "0.12.0"
 }
 
 # This allows us to randomize the region for the resource group.
@@ -51,7 +51,7 @@ data "template_file" "node_config" {
 
 module "virtual_network" {
   source  = "Azure/avm-res-network-virtualnetwork/azurerm"
-  version = "0.8.1"
+  version = "0.20.0"
 
   address_space       = ["10.0.0.0/16"]
   location            = azurerm_resource_group.this.location
@@ -85,7 +85,7 @@ resource "random_password" "admin_password" {
 
 module "avm_res_keyvault_vault" {
   source  = "Azure/avm-res-keyvault-vault/azurerm"
-  version = "0.10.0"
+  version = "0.10.2"
 
   location            = azurerm_resource_group.this.location
   name                = module.naming.key_vault.name_unique
@@ -143,7 +143,7 @@ resource "azurerm_marketplace_agreement" "cisco" {
 #create a cisco 8k nva for demonstrating bgp peers
 module "cisco_8k" {
   source  = "Azure/avm-res-compute-virtualmachine/azurerm"
-  version = "0.18.0"
+  version = "0.21.0"
 
   location = azurerm_resource_group.this.location
   name     = module.naming.virtual_machine.name_unique
@@ -254,7 +254,7 @@ The following requirements are needed by this module:
 
 - <a name="requirement_azapi"></a> [azapi](#requirement\_azapi) (~> 2.0)
 
-- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>= 3.115, < 5.0)
+- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>= 3.115, < 5.1)
 
 - <a name="requirement_random"></a> [random](#requirement\_random) (~> 3.5)
 
@@ -308,13 +308,13 @@ The following Modules are called:
 
 Source: Azure/avm-res-keyvault-vault/azurerm
 
-Version: 0.10.0
+Version: 0.10.2
 
 ### <a name="module_cisco_8k"></a> [cisco\_8k](#module\_cisco\_8k)
 
 Source: Azure/avm-res-compute-virtualmachine/azurerm
 
-Version: 0.18.0
+Version: 0.21.0
 
 ### <a name="module_full_route_server"></a> [full\_route\_server](#module\_full\_route\_server)
 
@@ -332,13 +332,13 @@ Version: ~> 0.4
 
 Source: Azure/avm-utl-regions/azurerm
 
-Version: 0.5.2
+Version: 0.12.0
 
 ### <a name="module_virtual_network"></a> [virtual\_network](#module\_virtual\_network)
 
 Source: Azure/avm-res-network-virtualnetwork/azurerm
 
-Version: 0.8.1
+Version: 0.20.0
 
 <!-- markdownlint-disable-next-line MD041 -->
 ## Data Collection
