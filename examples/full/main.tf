@@ -10,6 +10,7 @@ resource "random_integer" "region_index" {
   max = length(module.regions.regions) - 1
   min = 0
 }
+
 ## End of section to provide a random Azure region for the resource group
 
 # This ensures we have unique CAF compliant names for our resources.
@@ -228,4 +229,3 @@ module "full_route_server" {
     "scenario" = "AVM full route server"
   }
 }
-
