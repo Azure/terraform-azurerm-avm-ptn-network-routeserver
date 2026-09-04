@@ -9,7 +9,7 @@ This example deploys the module in the most common form.  It enables branch-to-b
 # This allows us to randomize the region for the resource group.
 module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
-  version = "0.5.2"
+  version = "0.12.0"
 }
 
 # This allows us to randomize the region for the resource group.
@@ -34,7 +34,7 @@ resource "azurerm_resource_group" "this" {
 
 module "virtual_network" {
   source  = "Azure/avm-res-network-virtualnetwork/azurerm"
-  version = "0.8.1"
+  version = "0.20.0"
 
   address_space       = ["10.0.0.0/16"]
   location            = azurerm_resource_group.this.location
@@ -76,7 +76,7 @@ The following requirements are needed by this module:
 
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (~> 1.9)
 
-- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>= 3.115, < 5.0)
+- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>= 3.115, < 5.1)
 
 - <a name="requirement_random"></a> [random](#requirement\_random) (~> 3.5)
 
@@ -134,13 +134,13 @@ Version: ~> 0.4
 
 Source: Azure/avm-utl-regions/azurerm
 
-Version: 0.5.2
+Version: 0.12.0
 
 ### <a name="module_virtual_network"></a> [virtual\_network](#module\_virtual\_network)
 
 Source: Azure/avm-res-network-virtualnetwork/azurerm
 
-Version: 0.8.1
+Version: 0.20.0
 
 <!-- markdownlint-disable-next-line MD041 -->
 ## Data Collection
