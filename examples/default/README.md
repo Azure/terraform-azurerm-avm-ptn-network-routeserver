@@ -11,7 +11,7 @@ module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
   version = "0.5.2"
 
-  enable_telemetry = false
+  enable_telemetry = var.enable_telemetry
 }
 
 # This allows us to randomize the region for the resource group.
@@ -41,7 +41,7 @@ module "virtual_network" {
   address_space       = ["10.0.0.0/16"]
   location            = azurerm_resource_group.this.location
   resource_group_name = azurerm_resource_group.this.name
-  enable_telemetry    = false
+  enable_telemetry    = var.enable_telemetry
   name                = module.naming.virtual_network.name_unique
   subnets = {
     "GatewaySubnet" = {
@@ -64,7 +64,7 @@ module "default" {
   resource_group_resource_id      = azurerm_resource_group.this.id
   route_server_subnet_resource_id = module.virtual_network.subnets["RouteServerSubnet"].resource_id
   enable_branch_to_branch         = true
-  enable_telemetry                = false
+  enable_telemetry                = var.enable_telemetry
   private_ip_allocation_method    = "Dynamic"
   routeserver_public_ip_config = {
     name = "routeserver-pip"
@@ -107,7 +107,7 @@ If it is set to false, then no telemetry will be collected.
 
 Type: `bool`
 
-Default: `true`
+Default: `false`
 
 ## Outputs
 

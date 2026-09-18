@@ -18,7 +18,7 @@ module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
   version = "0.5.2"
 
-  enable_telemetry = false
+  enable_telemetry = var.enable_telemetry
 }
 
 # This allows us to randomize the region for the resource group.
@@ -59,7 +59,7 @@ module "virtual_network" {
   address_space       = ["10.0.0.0/16"]
   location            = azurerm_resource_group.this.location
   resource_group_name = azurerm_resource_group.this.name
-  enable_telemetry    = false
+  enable_telemetry    = var.enable_telemetry
   name                = module.naming.virtual_network.name_unique
   subnets = {
     "GatewaySubnet" = {
@@ -95,7 +95,7 @@ module "avm_res_keyvault_vault" {
   name                = module.naming.key_vault.name_unique
   resource_group_name = azurerm_resource_group.this.name
   tenant_id           = data.azurerm_client_config.current.tenant_id
-  enable_telemetry    = false
+  enable_telemetry    = var.enable_telemetry
   network_acls = {
     default_action = "Allow"
   }
@@ -175,7 +175,7 @@ module "cisco_8k" {
   admin_username                     = "azureuser"
   custom_data                        = base64encode(data.template_file.node_config.rendered)
   disable_password_authentication    = false
-  enable_telemetry                   = false
+  enable_telemetry                   = var.enable_telemetry
   encryption_at_host_enabled         = true
   generate_admin_password_or_ssh_key = false
   os_disk = {
@@ -224,7 +224,7 @@ module "full_route_server" {
     }
   }
   enable_branch_to_branch      = true
-  enable_telemetry             = false
+  enable_telemetry             = var.enable_telemetry
   hub_routing_preference       = "ASPath"
   private_ip_address           = "10.0.1.10"
   private_ip_allocation_method = "Static"
@@ -294,7 +294,7 @@ If it is set to false, then no telemetry will be collected.
 
 Type: `bool`
 
-Default: `true`
+Default: `false`
 
 ## Outputs
 
