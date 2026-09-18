@@ -2,7 +2,7 @@
 # This allows us to randomize the region for the resource group.
 module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
-  version = "0.5.2"
+  version = "0.12.0"
 
   enable_telemetry = var.enable_telemetry
 }
@@ -29,7 +29,7 @@ resource "azurerm_resource_group" "this" {
 
 module "virtual_network" {
   source  = "Azure/avm-res-network-virtualnetwork/azurerm"
-  version = "0.8.1"
+  version = "0.22.2"
 
   address_space       = ["10.0.0.0/16"]
   location            = azurerm_resource_group.this.location
