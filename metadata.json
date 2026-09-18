@@ -1,0 +1,10 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/azure-verified-modules-tools/main/src/Avm.Authoring/Resources/Schemas/v1/avm-module-metadata.schema.json",
+  "moduleDisplayName": "Azure Route Server",
+  "moduleDescription": "AVM Pattern Module for Azure Route Server",
+  "canonicalType": "network-routeserver",
+  "owners": [
+    "jchancellor-ms"
+  ],
+  "telemetryIdPrefix": "46d3xtrf.ptn.5e80d93"
+}
