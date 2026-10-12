@@ -32,7 +32,7 @@ resource "random_integer" "region_index" {
 # This ensures we have unique CAF compliant names for our resources.
 module "naming" {
   source  = "Azure/naming/azurerm"
-  version = "~> 0.4"
+  version = "0.4.4"
 }
 
 resource "azurerm_resource_group" "this" {
@@ -330,7 +330,7 @@ Version:
 
 Source: Azure/naming/azurerm
 
-Version: ~> 0.4
+Version: 0.4.4
 
 ### <a name="module_regions"></a> [regions](#module\_regions)
 
