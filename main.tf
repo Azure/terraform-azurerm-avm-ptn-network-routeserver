@@ -12,6 +12,7 @@ resource "azapi_resource" "route_server_hub" {
   }
   response_export_values    = ["*"]
   schema_validation_enabled = false
+  tags                      = var.tags
 }
 
 resource "azurerm_public_ip" "route_server_pip" {
