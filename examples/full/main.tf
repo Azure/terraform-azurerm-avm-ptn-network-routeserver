@@ -2,7 +2,7 @@
 # This allows us to randomize the region for the resource group.
 module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
-  version = "0.5.2"
+  version = "0.12.0"
 
   enable_telemetry = var.enable_telemetry
 }
@@ -40,13 +40,12 @@ data "template_file" "node_config" {
 
 module "virtual_network" {
   source  = "Azure/avm-res-network-virtualnetwork/azurerm"
-  version = "0.8.1"
+  version = "0.22.2"
 
-  address_space       = ["10.0.0.0/16"]
-  location            = azurerm_resource_group.this.location
-  resource_group_name = azurerm_resource_group.this.name
-  enable_telemetry    = var.enable_telemetry
-  name                = module.naming.virtual_network.name_unique
+  location         = azurerm_resource_group.this.location
+  address_space    = ["10.0.0.0/16"]
+  enable_telemetry = var.enable_telemetry
+  name             = module.naming.virtual_network.name_unique
   subnets = {
     "GatewaySubnet" = {
       name             = "GatewaySubnet"
@@ -61,6 +60,7 @@ module "virtual_network" {
       address_prefixes = ["10.0.2.0/24"]
     }
   }
+  resource_group_name = azurerm_resource_group.this.name
 }
 
 resource "random_password" "admin_password" {
@@ -75,7 +75,7 @@ resource "random_password" "admin_password" {
 
 module "avm_res_keyvault_vault" {
   source  = "Azure/avm-res-keyvault-vault/azurerm"
-  version = "0.10.0"
+  version = "0.11.0"
 
   location            = azurerm_resource_group.this.location
   name                = module.naming.key_vault.name_unique
@@ -134,10 +134,19 @@ resource "azurerm_marketplace_agreement" "cisco" {
 #create a cisco 8k nva for demonstrating bgp peers
 module "cisco_8k" {
   source  = "Azure/avm-res-compute-virtualmachine/azurerm"
-  version = "0.18.0"
+  version = "0.21.0"
 
-  location = azurerm_resource_group.this.location
-  name     = module.naming.virtual_machine.name_unique
+  location                           = azurerm_resource_group.this.location
+  name                               = module.naming.virtual_machine.name_unique
+  resource_group_name                = azurerm_resource_group.this.name
+  zone                               = "1"
+  admin_password                     = random_password.admin_password.result
+  admin_username                     = "azureuser"
+  custom_data                        = base64encode(data.template_file.node_config.rendered)
+  disable_password_authentication    = false
+  enable_telemetry                   = var.enable_telemetry
+  encryption_at_host_enabled         = true
+  generate_admin_password_or_ssh_key = false
   network_interfaces = {
     network_interface_0 = {
       name                           = "${module.naming.virtual_machine.name_unique}-nic_0"
@@ -155,15 +164,6 @@ module "cisco_8k" {
       }
     }
   }
-  resource_group_name                = azurerm_resource_group.this.name
-  zone                               = "1"
-  admin_password                     = random_password.admin_password.result
-  admin_username                     = "azureuser"
-  custom_data                        = base64encode(data.template_file.node_config.rendered)
-  disable_password_authentication    = false
-  enable_telemetry                   = var.enable_telemetry
-  encryption_at_host_enabled         = true
-  generate_admin_password_or_ssh_key = false
   os_disk = {
     caching              = "ReadWrite"
     storage_account_type = "Premium_LRS"
