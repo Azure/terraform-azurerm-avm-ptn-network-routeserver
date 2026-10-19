@@ -33,7 +33,7 @@ resource "azurerm_resource_group" "this" {
 
 module "virtual_network" {
   source    = "Azure/avm-res-network-virtualnetwork/azurerm"
-  version   = "0.8.1"
+  version   = "0.22.3"
   providers = { modtm = modtm }
 
   address_space       = ["10.0.0.0/16"]
