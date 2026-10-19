@@ -2,8 +2,9 @@
 # This allows us to randomize the region for the resource group.
 module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
-  version = "0.5.2"
+  version = "0.13.0"
 
+  location         = var.location
   enable_telemetry = var.enable_telemetry
 }
 
@@ -17,8 +18,8 @@ resource "random_integer" "region_index" {
 
 # This ensures we have unique CAF compliant names for our resources.
 module "naming" {
-  source  = "Azure/naming/azurerm"
-  version = "0.4.4"
+  source  = "Azure/avm-utl-naming/azure"
+  version = "0.2.0"
 }
 
 resource "azurerm_resource_group" "this" {
@@ -39,8 +40,9 @@ data "template_file" "node_config" {
 }
 
 module "virtual_network" {
-  source  = "Azure/avm-res-network-virtualnetwork/azurerm"
-  version = "0.8.1"
+  source    = "Azure/avm-res-network-virtualnetwork/azurerm"
+  version   = "0.8.1"
+  providers = { modtm = modtm }
 
   address_space       = ["10.0.0.0/16"]
   location            = azurerm_resource_group.this.location
@@ -74,8 +76,9 @@ resource "random_password" "admin_password" {
 }
 
 module "avm_res_keyvault_vault" {
-  source  = "Azure/avm-res-keyvault-vault/azurerm"
-  version = "0.10.0"
+  source    = "Azure/avm-res-keyvault-vault/azurerm"
+  version   = "0.10.0"
+  providers = { modtm = modtm }
 
   location            = azurerm_resource_group.this.location
   name                = module.naming.key_vault.name_unique
@@ -133,8 +136,9 @@ resource "azurerm_marketplace_agreement" "cisco" {
 
 #create a cisco 8k nva for demonstrating bgp peers
 module "cisco_8k" {
-  source  = "Azure/avm-res-compute-virtualmachine/azurerm"
-  version = "0.18.0"
+  source    = "Azure/avm-res-compute-virtualmachine/azurerm"
+  version   = "0.18.0"
+  providers = { modtm = modtm }
 
   location = azurerm_resource_group.this.location
   name     = module.naming.virtual_machine.name_unique
