@@ -36,11 +36,10 @@ module "virtual_network" {
   version   = "0.22.3"
   providers = { modtm = modtm }
 
-  address_space       = ["10.0.0.0/16"]
-  location            = azurerm_resource_group.this.location
-  resource_group_name = azurerm_resource_group.this.name
-  enable_telemetry    = var.enable_telemetry
-  name                = module.naming.virtual_network.name_unique
+  location         = azurerm_resource_group.this.location
+  address_space    = ["10.0.0.0/16"]
+  enable_telemetry = var.enable_telemetry
+  name             = module.naming.virtual_network.name_unique
   subnets = {
     "GatewaySubnet" = {
       name             = "GatewaySubnet"
@@ -51,6 +50,7 @@ module "virtual_network" {
       address_prefixes = ["10.0.1.0/24"]
     }
   }
+  resource_group_name = azurerm_resource_group.this.name
 }
 
 module "default" {
