@@ -10,9 +10,6 @@ This example deploys the module in the most common form.  It enables branch-to-b
 module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
   version = "0.13.0"
-  providers = {
-    azapi = azapi
-  }
 
   location         = var.location
   enable_telemetry = var.enable_telemetry
@@ -39,9 +36,8 @@ resource "azurerm_resource_group" "this" {
 }
 
 module "virtual_network" {
-  source    = "Azure/avm-res-network-virtualnetwork/azurerm"
-  version   = "0.8.1"
-  providers = { modtm = modtm }
+  source  = "Azure/avm-res-network-virtualnetwork/azurerm"
+  version = "0.8.1"
 
   address_space       = ["10.0.0.0/16"]
   location            = azurerm_resource_group.this.location

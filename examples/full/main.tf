@@ -40,9 +40,8 @@ data "template_file" "node_config" {
 }
 
 module "virtual_network" {
-  source    = "Azure/avm-res-network-virtualnetwork/azurerm"
-  version   = "0.8.1"
-  providers = { modtm = modtm }
+  source  = "Azure/avm-res-network-virtualnetwork/azurerm"
+  version = "0.8.1"
 
   address_space       = ["10.0.0.0/16"]
   location            = azurerm_resource_group.this.location
@@ -76,9 +75,8 @@ resource "random_password" "admin_password" {
 }
 
 module "avm_res_keyvault_vault" {
-  source    = "Azure/avm-res-keyvault-vault/azurerm"
-  version   = "0.10.0"
-  providers = { modtm = modtm }
+  source  = "Azure/avm-res-keyvault-vault/azurerm"
+  version = "0.10.0"
 
   location            = azurerm_resource_group.this.location
   name                = module.naming.key_vault.name_unique
@@ -136,9 +134,8 @@ resource "azurerm_marketplace_agreement" "cisco" {
 
 #create a cisco 8k nva for demonstrating bgp peers
 module "cisco_8k" {
-  source    = "Azure/avm-res-compute-virtualmachine/azurerm"
-  version   = "0.18.0"
-  providers = { modtm = modtm }
+  source  = "Azure/avm-res-compute-virtualmachine/azurerm"
+  version = "0.18.0"
 
   location = azurerm_resource_group.this.location
   name     = module.naming.virtual_machine.name_unique
